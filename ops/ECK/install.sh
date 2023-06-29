@@ -1,0 +1,1 @@
+kubectl -n logging create secret generic elasticsearch-es-elastic-user --from-literal=elastic=123456a@

@@ -1,0 +1,28 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-collector
+  # component: otel-collector
+  
+spec:
+  mode: deployment
+  config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+          http: 
+    processors:
+    exporters:
+      logging:
+        loglevel: debug
+      # elasticsearch:
+      #   endpoint: "https://elasticsearch-master:9200"
+      #   user: "elastic"
+      #   password: "123456a@"
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: []
+          exporters: [logging]

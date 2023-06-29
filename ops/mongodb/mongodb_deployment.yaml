@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: #basic information about the object instance: object name, time of creation, owner object,...
+  name: mongodb-deployment
+  labels:
+    app: mongodb  #deployment name 
+
+spec: #specify the desired state of object 
+  replicas: 1 #number of pods 
+  selector:
+    matchLabels: 
+      app: mongodb-deployment
+  template: #template of pods 
+    metadata:
+      labels: # each app gets the same label
+        app: mongodb-deployment
+    spec:
+      containers: #name of the container 
+      - name: mongodb-deployment #pod name 
+        image: mongo #docker image 
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "0.5"
+        ports:
+        - containerPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+    nodePort: 30761
+  type: NodePort

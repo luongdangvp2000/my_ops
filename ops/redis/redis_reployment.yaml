@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: #basic information about the object instance: object name, time of creation, owner object,...
+  name: redis-deployment  #deployment name 
+spec: #specify the desired state of object 
+  replicas: 1 #number of pods 
+  selector:
+    matchLabels: 
+      app: redis-deployment
+  template: #template of pods 
+    metadata:
+      labels: # each app gets the same label
+        app: redis-deployment
+    spec:
+      containers: #name of the container 
+      - name: redis-deployment #pod name 
+        image: redis #docker image 
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "0.5"
+        ports:
+        - containerPort: 9696
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+  - protocol: TCP
+    port: 9696
+    targetPort: 9696

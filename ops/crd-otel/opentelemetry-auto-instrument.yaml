@@ -1,0 +1,28 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: instrumentation
+spec:
+  resource:
+    addK8sUIDAttributes: true
+  exporter:
+    endpoint: http://opentelemetry-collector.logging.svc.cluster.local:4317
+  propagators:
+    - tracecontext
+    - baggage
+    # - b3
+  sampler:
+    type: always_on
+    # argument: "0.25"
+  python:
+    env:
+      - name: OTEL_LOG_LEVEL
+        value: "debug"
+      - name: OTEL_TRACES_EXPORTER
+        value: otlp_proto_http
+      - name: OTEL_EXPORTER_OTLP_ENDPOINT
+        value: http://opentelemetry-collector.logging.svc.cluster.local:4318
+      - name: OTEL_EXPORTER_OTLP_PROTOCOL
+        value: grpc
+      - name: OTEL_EXPORTER_OTLP_INSECURE
+        value: "true"
